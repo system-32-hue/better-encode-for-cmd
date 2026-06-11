@@ -1,0 +1,2 @@
+del encode.cmd
+curl -L -o encode.cmd https://raw.githubusercontent.com/system-32-hue/better-encode-for-cmd/refs/heads/main/encode.cmd
