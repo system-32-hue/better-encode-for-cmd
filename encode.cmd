@@ -3,10 +3,16 @@ setlocal
 
 if "%1"=="encode" (
     powershell -NoProfile -Command ^
-    "$s='%~2';$o='';foreach($c in $s.ToCharArray()){ $o+=[char](((7*[int][char]$c)+13)%%256)};$o"
+    "$x=[int][char]'%~2'; ((7*$x+13)%%256)"
+    exit /b
 )
 
 if "%1"=="decode" (
     powershell -NoProfile -Command ^
-    "$s='%~2';$o='';foreach($c in $s.ToCharArray()){ $o+=[char]((183*(([int][char]$c)-13))%%256)};$o"
+    "$x=%~2; [char]((183*($x-13))%%256)"
+    exit /b
 )
+
+echo Uso:
+echo crypto encode a
+echo crypto decode 212
