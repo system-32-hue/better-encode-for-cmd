@@ -1,18 +1,17 @@
 @echo off
-setlocal
 
-if "%1"=="encode" (
+if /I "%1"=="encode" (
     powershell -NoProfile -Command ^
-    "$x=[int][char]'%~2'; ((7*$x+13)%%256)"
+    "$x=[int][char]('%~2');" ^
+    "$e=(7*$x+13)%%256;" ^
+    "Write-Output $e"
     exit /b
 )
 
-if "%1"=="decode" (
+if /I "%1"=="decode" (
     powershell -NoProfile -Command ^
-    "$x=%~2; [char]((183*($x-13))%%256)"
+    "$x=%~2;" ^
+    "$d=(183*($x-13))%%256;" ^
+    "[char]$d"
     exit /b
 )
-
-echo Uso:
-echo crypto encode a
-echo crypto decode 212
