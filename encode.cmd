@@ -1,21 +1,17 @@
 @echo off
-setlocal
+setlocal EnableDelayedExpansion
 
-set URL=https://raw.githubusercontent.com/system-32-hue/better-encode-for-cmd/refs/heads/main/encode.cmd
-set FILE=%TEMP%\encode.cmd
+:loop
+set /p input=^
 
-echo Baixando...
-powershell -Command "Invoke-WebRequest '%URL%' -OutFile '%FILE%'"
+for /f "delims=" %%A in ('powershell -NoProfile -Command ^
+"$s='%input%';" ^
+"if($s -match '^encode\((.*)\)$'){" ^
+"  ($matches[1].ToCharArray() ^| ForEach-Object {[int][char]$_}) -join '-'" ^
+"} elseif($s -match '^decode\((.*)\)$'){" ^
+"  $out=''; foreach($n in $matches[1].Split('-')){$out += [char][int]$n}; $out" ^
+"} else {" ^
+"  'Use: encode(texto) ou decode(numeros)'" ^
+"}"') do echo %%A
 
-echo.
-echo Arquivo salvo em:
-echo %FILE%
-
-echo.
-certutil -hashfile "%FILE%" SHA256
-
-echo.
-choice /M "Executar o arquivo baixado"
-if errorlevel 2 goto :eof
-
-call "%FILE%"
+goto loop
